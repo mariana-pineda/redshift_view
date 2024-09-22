@@ -1,0 +1,5 @@
+create view "view_detailed_video_insights" AS 
+ SELECT vd.video_id, vd.description, vd.updated_time, COALESCE(sum(vi.total_video_10s_views), 0::bigint) AS total_10s_views, COALESCE(sum(vi.total_video_15s_views), 0::bigint) AS total_15s_views, COALESCE(avg(vi.total_video_avg_time_watched), 0::bigint) AS avg_time_watched, COALESCE(sum(vi.total_video_complete_views), 0::bigint) AS complete_views, COALESCE(sum(vi.total_video_impressions), 0::bigint) AS impressions, COALESCE(sum(vi.total_video_views), 0::bigint) AS total_views, COALESCE(sum(vi.total_video_views_autoplayed), 0::bigint) AS autoplayed_views, COALESCE(sum(vi.total_video_views_clicked_to_play), 0::bigint) AS clicked_to_play_views, COALESCE(sum(vi.total_video_views_unique), 0::bigint) AS unique_views
+   FROM purgo_ai.facebook_video_details vd
+   LEFT JOIN purgo_ai.facebook_video_insights vi ON vd.video_id::text = vi.videoid::text
+  GROUP BY vd.video_id, vd.description, vd.updated_time
